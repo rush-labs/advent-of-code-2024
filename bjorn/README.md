@@ -1,6 +1,6 @@
 # Bjorn
 
-## Script
+## Scripts
 
 Activate environment:
 
