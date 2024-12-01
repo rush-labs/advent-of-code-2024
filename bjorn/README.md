@@ -2,6 +2,12 @@
 
 ## Script
 
+Activate environment:
+
+```bash
+source .venv/bin/activate
+```
+
 Generate requirements file:
 
 ```bash
