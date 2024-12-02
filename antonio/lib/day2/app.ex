@@ -40,9 +40,6 @@ defmodule Day2 do
 
       first < next ->
         :decrementing
-
-      true ->
-        :invalid
     end
   end
 
@@ -72,7 +69,7 @@ defmodule Day2 do
       end)
 
     valid = Enum.all?(values, fn %{valid: valid} -> valid == true end)
-    
+
     cond do
       attempt == 0 && !valid ->
         Enum.any?(values, fn value ->
