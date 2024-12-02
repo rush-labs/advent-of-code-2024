@@ -15,16 +15,21 @@ def safe_report_with_one_level_error?(levels)
   return false if levels.length < 2
 
   differences = levels.each_cons(2).map { |a, b| b - a }
-  invalid_count = differences.count { |d| d.abs < 1 || d.abs > 3 }
-  return false if invalid_count > 1
+  if differences.all? { |d| d.between?(1, 3) } || differences.all? { |d| d.between?(-3, -1) }
+    return true
+  end
 
-  valid_differences = differences.select { |d| d.abs >= 1 && d.abs <= 3 }
-  return false if valid_differences.empty?
+  # Check if safe when removing one level
+  levels.each_index do |i|
+    modified_levels = levels[0...i] + levels[i+1..-1]
+    modified_differences = modified_levels.each_cons(2).map { |a, b| b - a }
 
-  all_increasing = valid_differences.all? { |d| d > 0 }
-  all_decreasing = valid_differences.all? { |d| d < 0 }
+    if modified_differences.all? { |d| d.between?(1, 3) } || modified_differences.all? { |d| d.between?(-3, -1) }
+      return true
+    end
+  end
 
-  all_increasing || all_decreasing
+  false
 end
 
 def part_one
@@ -35,10 +40,10 @@ def part_one
 end
 
 def part_two
-  data = Utils.read_and_parse("tom/day_two/example.txt")
-  safe_count = data.count { |report| safe_report_with_one_level_error?(report) }
+  data = Utils.read_and_parse("tom/day_two/inputs.txt")
+  results = data.count { |report| safe_report_with_one_level_error?(report) }
 
-  puts safe_count
+  puts results
 end
 
 part_two
