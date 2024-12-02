@@ -1,8 +1,8 @@
 import Foundation
 
 enum Status {
-    case Safe
-    case Unsafe
+    case safe     // Changed to lowercase to follow Swift naming conventions
+    case unsafe   // Changed to lowercase to follow Swift naming conventions
 }
 
 struct Day2 {
@@ -13,9 +13,8 @@ struct Day2 {
         let lines = input.components(separatedBy: .newlines)
 
         let floors: [[Int]] = lines.map { line in
-            return line.split(separator: " ").map { numberString in Int(numberString) ?? 0}
-        }.filter { floor in floor != []}
-
+            return line.split(separator: " ").compactMap { Int($0) }
+        }.filter { !$0.isEmpty }
 
         return floors
     }
@@ -24,30 +23,71 @@ struct Day2 {
         let floors = readInputFile()
 
         let status: [Status] = floors.map { floor in
-            if(floor.sorted() != floor && floor.sorted(by: >) != floor){
-                return Status.Unsafe
+            if floor.sorted() != floor && floor.sorted(by: >) != floor {
+                return .unsafe
             }
-            return floor.enumerated().reduce(Status.Safe) { (s, tuple) in
+
+            return floor.enumerated().reduce(.safe) { (s, tuple) in
                 let (index, pos) = tuple
 
-                guard index > 0 else { return s}
+                guard index > 0 else { return s }
 
-                if s == .Unsafe {
-                    return .Unsafe
+                if s == .unsafe {
+                    return .unsafe
                 }
 
-                let diff = abs(pos - floor[index-1])
+                let diff = abs(pos - floor[index - 1])
 
                 if diff > 3 || diff < 1 {
-                    return .Unsafe
+                    return .unsafe
                 }
 
-                return .Safe
-
+                return .safe
             }
         }
 
-        return String(status.filter { s in s == Status.Safe}.count)
+        return String(status.filter { $0 == .safe }.count)
     }
 
+    func generatePartialFloors(mainFloor: [Int]) -> [[Int]] {
+        return mainFloor.enumerated().map { index, _ in
+            mainFloor.enumerated().filter { i, _ in
+                index != i
+            }.map { $0.1 }
+        }
+    }
+
+    func solvePart2() -> String {
+        let floors = readInputFile()
+
+        let status: [Status] = floors.map { mainFloor in
+            let statusForGeneratedFloors = generatePartialFloors(mainFloor: mainFloor).map { floor in
+                if floor.sorted() != floor && floor.sorted(by: >) != floor {
+                    return Status.unsafe
+                }
+
+                return floor.enumerated().reduce(.safe) { (s, tuple) in
+                    let (index, pos) = tuple
+
+                    guard index > 0 else { return s }
+
+                    if s == .unsafe {
+                        return .unsafe
+                    }
+
+                    let diff = abs(pos - floor[index - 1])
+
+                    if diff > 3 || diff < 1 {
+                        return .unsafe
+                    }
+
+                    return .safe
+                }
+            }
+
+            return statusForGeneratedFloors.contains(where: { $0 == .safe }) ? .safe : .unsafe
+        }
+
+        return String(status.filter { $0 == .safe }.count)
+    }
 }
