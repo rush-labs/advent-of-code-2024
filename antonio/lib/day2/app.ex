@@ -72,22 +72,7 @@ defmodule Day2 do
       end)
 
     valid = Enum.all?(values, fn %{valid: valid} -> valid == true end)
-
-    #    cond do
-    #      attempt == 0 && !valid ->
-    #        evaluate_report_2(
-    #          List.delete(
-    #            values,
-    #            Enum.find(values, fn map -> map.valid == false end)
-    #          )
-    #          |> Enum.map(fn %{chunk: chunk} -> chunk end)
-    #          |> Day2.build_list_from_chunks(),
-    #          1
-    #        )
-    #
-    #      true ->
-    #        valid
-    #    end
+    
     cond do
       attempt == 0 && !valid ->
         Enum.any?(values, fn value ->
