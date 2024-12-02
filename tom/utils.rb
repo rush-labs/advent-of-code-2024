@@ -10,5 +10,4 @@ module Utils
     end
     data
   end
-
 end
