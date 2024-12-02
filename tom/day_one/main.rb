@@ -1,12 +1,4 @@
-# Read the file and parse into columns
-def read_and_parse(filename)
-  data = []
-  File.foreach(filename) do |line|
-    numbers = line.split.map(&:to_i)
-    data << numbers
-  end
-  data
-end
+require_relative '../utils'
 
 # Returns [col1, col2, diff]
 def process_data(data)
@@ -20,7 +12,7 @@ end
 
 
 def part_one
-  data = read_and_parse("tom/day-1/inputs.txt")
+  data = Utils.read_and_parse("tom/day_one/inputs.txt")
   results = process_data(data)
 
   total_diff = results.sum { |_, _, diff| diff}
@@ -28,7 +20,7 @@ def part_one
 end
 
 def part_two
-  data = read_and_parse("tom/day-1/inputs.txt")
+  data = Utils.read_and_parse("tom/day_one/inputs.txt")
   results = process_data(data)
 
   total = 0
