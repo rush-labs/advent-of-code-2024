@@ -33,14 +33,14 @@ def safe_report_with_one_level_error?(levels)
 end
 
 def part_one
-  data = Utils.read_and_parse("tom/day_two/example.txt")
+  data = Utils.read_and_parse("tom/day-2/example.txt")
   safe_count = data.count { |report| safe_report?(report) }
 
   puts safe_count
 end
 
 def part_two
-  data = Utils.read_and_parse("tom/day_two/inputs.txt")
+  data = Utils.read_and_parse("tom/day-2/inputs.txt")
   results = data.count { |report| safe_report_with_one_level_error?(report) }
 
   puts results
