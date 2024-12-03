@@ -12,7 +12,7 @@ end
 
 
 def part_one
-  data = Utils.read_and_parse("tom/day-1/inputs.txt")
+  data = Utils.read_and_parse_to_i("tom/day-1/inputs.txt")
   results = process_data(data)
 
   total_diff = results.sum { |_, _, diff| diff}
@@ -20,7 +20,7 @@ def part_one
 end
 
 def part_two
-  data = Utils.read_and_parse("tom/day-1/inputs.txt")
+  data = Utils.read_and_parse_to_i("tom/day-1/inputs.txt")
   results = process_data(data)
 
   total = 0
