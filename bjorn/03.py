@@ -33,7 +33,7 @@ def part_2():
     sections = re.split(r"(?:do\(\)|don\'t\(\))", content)
     commands = re.findall(r"(?:do\(\)|don\'t\(\))", content)
 
-    # Implicitly add do() at the beginning
+    # Add implied do() at the beginning
     commands.insert(0, "do()")
 
     mul_pattern = r"mul\((\d+),(\d+)\)"
