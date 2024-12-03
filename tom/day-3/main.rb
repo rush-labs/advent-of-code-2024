@@ -1,6 +1,7 @@
 require_relative '../utils'
 
 def mul(x, y)
+  puts "#{x} * #{y} = #{x.to_i * y.to_i}"
   x.to_i * y.to_i
 end
 
@@ -14,14 +15,11 @@ def mul_scanner(filename)
 end
 
 def part_one
-  factors = mul_scanner("tom/day-3/inputs.txt")
+  factors = mul_scanner("tom/day-3/example.txt")
   print factors
+  puts ''
   total = factors.sum{|factor| mul(factor[0], factor[1]) }
   puts total
-  # input = File.readlines("tom/day-3/example.txt").map(&:chomp)
-  # puts input
-  # string = input.to_s
-  # puts string.split(/mul\((\d{1,3}),\1\)/)
 end
 
 part_one
