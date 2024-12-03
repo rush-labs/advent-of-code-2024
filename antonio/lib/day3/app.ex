@@ -6,13 +6,9 @@ defmodule Day3 do
     File.read!(@base_path <> path)
   end
 
-  def instruction_type(instruction) do
-    cond do
-      String.starts_with?(instruction, "mul(") -> :mul
-      String.starts_with?(instruction, "do(") -> :do
-      String.starts_with?(instruction, "don't(") -> :dont
-    end
-  end
+  ######################
+  # PART 1             #
+  ######################
 
   def handle_instruction(instruction) do
     instruction
@@ -25,23 +21,6 @@ defmodule Day3 do
     end)
   end
 
-  def handle_instruction_2(instruction) do
-    case Day3.instruction_type(instruction) do
-      :mul ->
-        instruction
-        |> String.replace("mul(", "")
-        |> String.replace(")", "")
-        |> String.split(",")
-        |> Enum.map(fn el -> String.to_integer(el) end)
-        |> then(fn [a, b] ->
-          {:mult, a * b}
-        end)
-      :dont -> {:dont}
-      :do -> {:do}
-    end
-  end
-
-
   def part1 do
     load_input("input.txt")
     |> then(fn value -> Regex.scan(~r/mul\(\d{1,3},\d{1,3}\)/, value) end)
@@ -50,23 +29,47 @@ defmodule Day3 do
     |> sum()
   end
 
+  ######################
+  # PART 2             #
+  ######################
+
+  defp parse_instruction("do(" <> _), do: :enable
+  defp parse_instruction("don't(" <> _), do: :disable
+  defp parse_instruction(multiplication), do: parse_multiplication(multiplication)
+
+  def parse_multiplication(instruction) do
+    instruction
+    |> String.replace("mul(", "")
+    |> String.replace(")", "")
+    |> String.split(",")
+    |> Enum.map(fn el -> String.to_integer(el) end)
+    |> case do
+         [a, b] -> {:multiply, a * b}
+       end
+  end
+
+  defp process_instruction(:enable, state) do
+    %{state | enabled?: true}
+  end
+
+  defp process_instruction(:disable, state) do
+    %{state | enabled?: false}
+  end
+
+  defp process_instruction({:multiply, value}, %{enabled?: true, total: total}) do
+    %{enabled?: true, total: total + value}
+  end
+
+  defp process_instruction({:multiply, _value}, state) do
+    state
+  end
+
   def part2 do
     load_input("input.txt")
-    |> then(fn value -> Regex.scan(~r/mul\([0-9]+,[0-9]+\)|do\(\)|don\'t\(\)/, value) end)
+    |> Regex.scan(~r/mul\([0-9]+,[0-9]+\)|do\(\)|don\'t\(\)/, value)
     |> List.flatten
-    |> map(&Day3.handle_instruction_2(&1))
-    |> IO.inspect
-    |> reduce(%{enabled: true, total: 0}, fn nextInstruction, %{enabled: enabled, total: total} ->
-      case nextInstruction do
-        {:do} -> %{enabled: true, total: total}
-        {:dont} -> %{enabled: false, total: total}
-        {:mult, value} ->
-          case enabled do
-            true -> %{enabled: true, total: total + value}
-            false -> %{enabled: false, total: total}
-          end
-      end
-    end)
-    |> then(fn value -> value.total end)
+    |> map(&parse_instruction(&1))
+    |> reduce(%{enabled?: true, total: 0}, &process_instruction/2)
+    |> Map.get(:total)
   end
 end
