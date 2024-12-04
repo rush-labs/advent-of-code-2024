@@ -42,7 +42,7 @@ defmodule Day3 do
     |> String.replace("mul(", "")
     |> String.replace(")", "")
     |> String.split(",")
-    |> Enum.map(fn el -> String.to_integer(el) end)
+    |> Enum.map(&String.to_integer(&1))
     |> case do
          [a, b] -> {:multiply, a * b}
        end
@@ -66,7 +66,7 @@ defmodule Day3 do
 
   def part2 do
     load_input("input.txt")
-    |> Regex.scan(~r/mul\([0-9]+,[0-9]+\)|do\(\)|don\'t\(\)/, value)
+    |> then(fn value -> Regex.scan(~r/mul\([0-9]+,[0-9]+\)|do\(\)|don\'t\(\)/, value) end)
     |> List.flatten
     |> map(&parse_instruction(&1))
     |> reduce(%{enabled?: true, total: 0}, &process_instruction/2)
