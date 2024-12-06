@@ -31,7 +31,7 @@ defmodule Day4 do
     end
   end
 
-  def read_in_direction(:left, matrix, %{x: x}) do
+  def read_in_direction(:left, matrix, %{x: x, y: y}) do
     0..3
     |> Enum.map(fn value -> get_char_at_pos(matrix, %{x: x - value, y: y}) end)
   end
@@ -111,8 +111,17 @@ defmodule Day4 do
   ######################
 
   defp read_char_2("A", matrix, %{x: x, y: y}) do
-    first_diagonal = read_in_direction(:down_and_right, matrix, %{x: x - 1, y: y - 1}) |> reject(&is_nil(&1)) |> join("") |> String.slice(0..2)
-    second_diagonal = read_in_direction(:down_and_left, matrix, %{x: x + 1, y: y - 1}) |> reject(&is_nil(&1)) |> join("") |> String.slice(0..2)
+    first_diagonal =
+      read_in_direction(:down_and_right, matrix, %{x: x - 1, y: y - 1})
+      |> reject(&is_nil(&1))
+      |> join("")
+      |> String.slice(0..2)
+
+    second_diagonal =
+      read_in_direction(:down_and_left, matrix, %{x: x + 1, y: y - 1})
+      |> reject(&is_nil(&1))
+      |> join("")
+      |> String.slice(0..2)
 
     case [first_diagonal, second_diagonal] do
       ["MAS", "MAS"] -> 1

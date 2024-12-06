@@ -24,7 +24,7 @@ defmodule Day3 do
   def part1 do
     load_input("input.txt")
     |> then(fn value -> Regex.scan(~r/mul\(\d{1,3},\d{1,3}\)/, value) end)
-    |> List.flatten
+    |> List.flatten()
     |> map(&Day3.handle_instruction(&1))
     |> sum()
   end
@@ -44,8 +44,8 @@ defmodule Day3 do
     |> String.split(",")
     |> Enum.map(&String.to_integer(&1))
     |> case do
-         [a, b] -> {:multiply, a * b}
-       end
+      [a, b] -> {:multiply, a * b}
+    end
   end
 
   defp process_instruction(:enable, state) do
@@ -67,7 +67,7 @@ defmodule Day3 do
   def part2 do
     load_input("input.txt")
     |> then(fn value -> Regex.scan(~r/mul\([0-9]+,[0-9]+\)|do\(\)|don\'t\(\)/, value) end)
-    |> List.flatten
+    |> List.flatten()
     |> map(&parse_instruction(&1))
     |> reduce(%{enabled?: true, total: 0}, &process_instruction/2)
     |> Map.get(:total)
