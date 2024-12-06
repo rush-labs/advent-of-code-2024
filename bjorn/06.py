@@ -13,41 +13,41 @@ def load_map(filename):
         )
 
 
-def find_guard_position(map_array):
-    y, x = np.where(map_array == GUARD_TILE)
+def find_guard_position(map):
+    y, x = np.where(map == GUARD_TILE)
     return int(y[0]), int(x[0])
 
 
-def move(pos, direction, map_array):
-    new_y = pos[0] + DIRECTIONS[direction][0]
-    new_x = pos[1] + DIRECTIONS[direction][1]
+def move(position, direction, map):
+    new_y = position[0] + DIRECTIONS[direction][0]
+    new_x = position[1] + DIRECTIONS[direction][1]
 
     if (
-        0 <= new_y < map_array.shape[0]
-        and 0 <= new_x < map_array.shape[1]
-        and map_array[new_y, new_x] != OBSTACLE_TILE
+        0 <= new_y < map.shape[0]
+        and 0 <= new_x < map.shape[1]
+        and map[new_y, new_x] != OBSTACLE_TILE
     ):
         return (new_y, new_x), direction
 
-    return pos, (direction + 1) % 4
+    return position, (direction + 1) % 4
 
 
-def is_guard_outside(pos, map_array):
-    return pos[0] in (0, map_array.shape[0] - 1) or pos[1] in (
+def is_guard_outside(position, map):
+    return position[0] in (0, map.shape[0] - 1) or position[1] in (
         0,
-        map_array.shape[1] - 1,
+        map.shape[1] - 1,
     )
 
 
-def create_path(map_array):
-    pos = find_guard_position(map_array)
+def create_path(map):
+    position = find_guard_position(map)
     direction = 0
-    path = [pos]
-    map_array[pos] = EMPTY_TILE
+    path = [position]
+    map[position] = EMPTY_TILE
 
-    while not is_guard_outside(pos, map_array):
-        pos, direction = move(pos, direction, map_array)
-        path.append(pos)
+    while not is_guard_outside(position, map):
+        position, direction = move(position, direction, map)
+        path.append(position)
 
     return len(set(path))
 
